@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex | Digital Creator</title>
+    <!-- Modern Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --accent-blue: #00d2ff;
+            --accent-purple: #9d50bb;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- FUTURISTIC ANIMATED BACKGROUND --- */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0c 100%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: moveStars 100s linear infinite;
+        }
+
+        @keyframes moveStars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-2000px); }
+        }
+
+        .glow {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, var(--accent-purple), transparent 70%);
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20%, 10%); }
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Bento Grid CV */
+        .cv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(150px, auto);
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Grid Item Spans */
+        .about-card { grid-column: span 2; }
+        .skills-card { grid-row: span 2; }
+        .work-card { grid-column: span 2; }
+        .social-card { grid-column: span 1; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;}
+
+        h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--accent-blue);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin: 4px;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        /* --- APPROACHABLE GEN-Z ELEMENTS --- */
+        .vibe-check {
+            font-style: italic;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .status-pill {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: #22c55e22;
+            color: #22c55e;
+            border: 1px solid #22c55e44;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .cv-grid { grid-template-columns: 1fr; }
+            .about-card, .skills-card, .work-card { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-container" id="bg">
+        <div class="glow" style="top: 10%; left: 10%;"></div>
+        <div class="glow" style="bottom: 10%; right: 10%; background: radial-gradient(circle, var(--accent-blue), transparent 70%);"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="hero">
+            <p>Yo, I'm</p>
+            <h1>ALEXANDER</h1>
+            <p class="vibe-check">Digital Architect & Coffee Enthusiast</p>
+        </header>
+
+        <!-- Bento Grid CV -->
+        <main class="cv-grid">
+            
+            <!-- About -->
+            <section class="card about-card">
+                <div class="status-pill"><div class="status-dot"></div> Open for Gigs</div>
+                <h3>The TL;DR</h3>
+                <p>22-year-old developer based in Neo-Tokyo (mostly). I build high-performance web experiences that don't just work—they feel like the future. Passionate about Web3, minimalist UI, and building tools that people actually enjoy using.</p>
+            </section>
+
+            <!-- Skills -->
+            <section class="card skills-card">
+                <h3>Main Stacks</h3>
+                <div style="margin-top: 10px;">
+                    <span class="tag">React / Next.js</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">Three.js</span>
+                    <span class="tag">Framer Motion</span>
+                    <span class="tag">PostgreSQL</span>
+                    <span class="tag">UI/UX Design</span>
+                    <span class="tag">Solidity</span>
+                </div>
+                <h3 style="margin-top: 30px;">Vibes</h3>
+                <p style="font-size: 0.9rem; color: var(--text-dim);">
+                    Lo-fi beats, mechanical keyboards, and 100% test coverage.
+                </p>
+            </section>
+
+            <!-- Social/Contact -->
+            <section class="card social-card" style="cursor: pointer;" onclick="window.location.href='mailto:hello@alex.dev'">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 5px;">Hit me up</div>
+                    <div style="font-weight: 600;">Let's Chat ⚡️</div>
+                </div>
+            </section>
+
+            <!-- Experience -->
+            <section class="card work-card">
+                <h3>Proof of Work</h3>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <strong style="color: #fff;">Lead Frontend @ Nexus Labs</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-dim);">Built a decentralized dashboard for 50k+ active users. Redefined their design system from scratch.</p>
+                    </div>
+                    <div>
+                        <strong style="color: #fff;">Creator of "Vibe-Check.css"</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-dim);">Open-source micro-library with 2k+ stars on GitHub.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Extra -->
+            <section class="card">
+                <h3>Location</h3>
+                <p>Digital Nomad / Earth</p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Generate stars dynamically
+        const bg = document.getElementById('bg');
+        const count = 150;
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = 'stars';
+            const x = Math.random() * 100;
+            const y = Math.random() * 2000;
+            const duration = 50 + Math.random() * 100;
+            star.style.left = `${x}%`;
+            star.style.top = `${y}px`;
+            star.style.animationDuration = `${duration}s`;
+            bg.appendChild(star);
+        }
+
+        // Add subtle parallax to cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            cards.forEach(card => {
+                const speed = 10;
+                card.style.transform = `translate(${(x - 0.5) * speed}px, ${(y - 0.5) * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
