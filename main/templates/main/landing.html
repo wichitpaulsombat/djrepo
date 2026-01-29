@@ -210,6 +210,18 @@
         <!-- Bento Grid CV -->
         <main class="cv-grid">
             
+            <div class="card">
+                <h3>Users on Platform</h3>
+                <p style="font-size: 2rem; font-weight: 600; margin-top: 10px;">
+                    {{ users|length }}
+                </p>
+                {% for user in users %}
+                    <div style="font-size: 0.8rem; color: var(--text-dim);">
+                        {{ user.username }} - {{ user.email }}
+                    </div>
+                {% endfor %}
+            </div>
+
             <!-- About -->
             <section class="card about-card">
                 <div class="status-pill"><div class="status-dot"></div> Open for Gigs</div>
@@ -248,14 +260,17 @@
             <section class="card work-card">
                 <h3>Proof of Work</h3>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
+                    {% for job in jobs %}
                     <div>
-                        <strong style="color: #fff;">Lead Frontend @ Nexus Labs</strong>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">Built a decentralized dashboard for 50k+ active users. Redefined their design system from scratch.</p>
+                        <strong style="color: #fff;">{{ job.position }} @ {{ job.company.name }}</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-dim);">
+                            {{ job.description }}
+                        </p>
+                        <p style="font-size: 0.85rem; color: var(--text-dim);">
+                            {{ job.start_date }} - {% if job.end_date %}{{ job.end_date }}{% else %}Present{% endif %}
+                        </p>
                     </div>
-                    <div>
-                        <strong style="color: #fff;">Creator of "Vibe-Check.css"</strong>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">Open-source micro-library with 2k+ stars on GitHub.</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
 
