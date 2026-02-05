@@ -74,11 +74,29 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'resume_db',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST': 'localhost', #'postgres',
+        'PORT': '5432',
+    },
+    'mariadb': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'resume_db',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': 'localhost', #'mariadb',
+        'PORT': '3306',
     }
 }
+
+DATABASES['default'] = DATABASES['sqlite']
 
 
 # Password validation

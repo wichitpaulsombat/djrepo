@@ -1,0 +1,69 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Browse Resumes - ResumeHub{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+    <div>
+        <h1 style="margin-bottom: 0.5rem; font-size: 2.5rem;">Professional Talent</h1>
+        <p style="color: var(--text-muted);">Explore resumes from our expert community members.</p>
+    </div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'edit_resume' %}" class="btn">Update My Resume</a>
+    {% endif %}
+</div>
+
+<div class="resume-grid">
+    {% for resume in resumes %}
+        <a href="{% url 'resume_detail' resume.pk %}" style="text-decoration: none; color: inherit;">
+            <div class="card" style="transition: transform 0.3s, border-color 0.3s; height: 100%;">
+                <div style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem;">
+                    {% if resume.profile_image %}
+                        <img src="{{ resume.profile_image.url }}" alt="{{ resume.owner.username }}" style="width: 80px; height: 80px; border-radius: 1rem; object-fit: cover; border: 2px solid var(--primary);">
+                    {% else %}
+                        <div style="width: 80px; height: 80px; border-radius: 1rem; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700;">
+                            {{ resume.owner.username|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h3 style="margin-bottom: 0.25rem;">{{ resume.owner.get_full_name|default:resume.owner.username }}</h3>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #fbbf24;">
+                            {% if resume.average_rating %}
+                                <span>★ {{ resume.average_rating|stringformat:".1f" }}</span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 0.875rem;">No ratings</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95rem;">
+                    {{ resume.success_summary }}
+                </p>
+                
+                <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for skill in resume.skills.all|slice:":3" %}
+                        <span style="background: rgba(99, 102, 241, 0.1); color: #818cf8; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(99, 102, 241, 0.2);">
+                            {{ skill.name }}
+                        </span>
+                    {% endfor %}
+                    {% if resume.skills.count > 3 %}
+                        <span style="color: var(--text-muted); font-size: 0.75rem; align-self: center;">+{{ resume.skills.count|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+            <p style="color: var(--text-muted);">No resumes found yet. Be the first to create one!</p>
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-8px);
+        border-color: var(--primary);
+        box-shadow: 0 30px 60px -12px rgba(99, 102, 241, 0.25);
+    }
+</style>
+{% endblock %}

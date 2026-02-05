@@ -1,0 +1,33 @@
+<a href="{% url 'resume_detail' resume.pk %}" class="resume-card">
+    <div class="card">
+        <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 0.5rem;">
+            {% if resume.profile_image %}
+                <img src="{{ resume.profile_image.url }}" alt="{{ resume.owner.username }}" class="profile-img">
+            {% else %}
+                <div class="profile-placeholder">
+                    {{ resume.owner.username|first|upper }}
+                </div>
+            {% endif %}
+            <div style="flex: 1;">
+                <h4 style="margin: 0; font-size: 1.1rem;">{{ resume.owner.get_full_name|default:resume.owner.username }}</h4>
+                <div class="rating-badge">
+                    {% if resume.average_rating %}
+                        ★ {{ resume.average_rating|stringformat:".1f" }}
+                    {% elif resume.avg_rating %}
+                        ★ {{ resume.avg_rating|stringformat:".1f" }}
+                    {% else %}
+                        <span style="color: var(--text-muted); font-size: 0.75rem;">New</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0;">
+            {{ resume.success_summary }}
+        </p>
+        <div class="skill-tags">
+            {% for skill in resume.skills.all|slice:":3" %}
+                <span class="skill-tag">{{ skill.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</a>

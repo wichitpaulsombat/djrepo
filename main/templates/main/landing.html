@@ -1,315 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex | Digital Creator</title>
-    <!-- Modern Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #0a0a0c;
-            --accent-blue: #00d2ff;
-            --accent-purple: #9d50bb;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #e0e0e0;
-            --text-dim: #a0a0a0;
-        }
+{% extends 'main/base.html' %}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% block title %}ResumeHub - Discover Top Talent{% endblock %}
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+{% block extra_head %}
+<style>
+    .horizontal-scroll-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--primary);
+        padding-left: 1rem;
+    }
 
-        /* --- FUTURISTIC ANIMATED BACKGROUND --- */
-        .bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0c 100%);
-        }
+    .section-header h2 {
+        margin-bottom: 0;
+        font-size: 1.75rem;
+    }
 
-        .stars {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: moveStars 100s linear infinite;
-        }
+    .search-hero {
+        text-align: center;
+        padding: 4rem 0;
+        background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        border-radius: 2rem;
+        margin-bottom: 4rem;
+    }
 
-        @keyframes moveStars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-2000px); }
-        }
+    .search-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-        .glow {
-            position: absolute;
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle, var(--accent-purple), transparent 70%);
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: float 15s ease-in-out infinite alternate;
-        }
+    .search-form {
+        max-width: 600px;
+        margin: 2rem auto 0;
+        position: relative;
+    }
 
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(20%, 10%); }
-        }
+    .search-form input {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 1rem;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    }
 
-        /* --- LAYOUT --- */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
+    .search-form button {
+        position: absolute;
+        right: 0.75rem;
+        top: 0.75rem;
+        padding: 0.5rem 1.5rem;
+    }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+    .resume-card {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
 
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
+    .resume-card .card {
+        height: 100%;
+        transition: transform 0.3s, border-color 0.3s;
+        padding: 1.5rem;
+        margin-bottom: 0;
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+    .resume-card:hover .card {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+    }
 
-        /* Bento Grid CV */
-        .cv-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: minmax(150px, auto);
-            gap: 20px;
-        }
+    .profile-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 0.75rem;
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
 
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 30px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
+    .profile-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 0.75rem;
+        background: #334155;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
 
-        .card:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-5px) scale(1.02);
-            background: rgba(255, 255, 255, 0.05);
-        }
+    .rating-badge {
+        color: #fbbf24;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
 
-        /* Grid Item Spans */
-        .about-card { grid-column: span 2; }
-        .skills-card { grid-row: span 2; }
-        .work-card { grid-column: span 2; }
-        .social-card { grid-column: span 1; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;}
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 1rem;
+    }
 
-        h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--accent-blue);
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
+    .skill-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+        background: rgba(99, 102, 241, 0.1);
+        color: #818cf8;
+        border-radius: 2rem;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+</style>
+{% endblock %}
 
-        .tag {
-            display: inline-block;
-            padding: 5px 12px;
-            background: rgba(0, 210, 255, 0.1);
-            color: var(--accent-blue);
-            border-radius: 50px;
-            font-size: 0.8rem;
-            margin: 4px;
-            border: 1px solid rgba(0, 210, 255, 0.2);
-        }
+{% block content %}
 
-        /* --- APPROACHABLE GEN-Z ELEMENTS --- */
-        .vibe-check {
-            font-style: italic;
-            color: var(--accent-purple);
-            font-weight: 600;
-        }
-
-        .status-pill {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            background: #22c55e22;
-            color: #22c55e;
-            border: 1px solid #22c55e44;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            .cv-grid { grid-template-columns: 1fr; }
-            .about-card, .skills-card, .work-card { grid-column: span 1; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="bg-container" id="bg">
-        <div class="glow" style="top: 10%; left: 10%;"></div>
-        <div class="glow" style="bottom: 10%; right: 10%; background: radial-gradient(circle, var(--accent-blue), transparent 70%);"></div>
+{% if is_search %}
+    <div style="margin-bottom: 3rem;">
+        <a href="{% url 'landing_page' %}" style="color: var(--primary); text-decoration: none;">← Back to Home</a>
+        <h1 style="margin-top: 1rem;">Search Results for "{{ query }}"</h1>
+        <p style="color: var(--text-muted);">{{ resumes|length }} resumes found</p>
     </div>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="hero">
-            <p>Yo, I'm</p>
-            <h1>ALEXANDER</h1>
-            <p class="vibe-check">Digital Architect & Coffee Enthusiast</p>
-        </header>
-
-        <!-- Bento Grid CV -->
-        <main class="cv-grid">
-            
-            <div class="card">
-                <h3>Users on Platform</h3>
-                <p style="font-size: 2rem; font-weight: 600; margin-top: 10px;">
-                    {{ users|length }}
-                </p>
-                {% for user in users %}
-                    <div style="font-size: 0.8rem; color: var(--text-dim);">
-                        {{ user.username }} - {{ user.email }}
-                    </div>
-                {% endfor %}
+    <div class="horizontal-scroll-container">
+        {% for resume in resumes %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% empty %}
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+                <p style="color: var(--text-muted);">No results found for your search.</p>
             </div>
-
-            <!-- About -->
-            <section class="card about-card">
-                <div class="status-pill"><div class="status-dot"></div> Open for Gigs</div>
-                <h3>The TL;DR</h3>
-                <p>22-year-old developer based in Neo-Tokyo (mostly). I build high-performance web experiences that don't just work—they feel like the future. Passionate about Web3, minimalist UI, and building tools that people actually enjoy using.</p>
-            </section>
-
-            <!-- Skills -->
-            <section class="card skills-card">
-                <h3>Main Stacks</h3>
-                <div style="margin-top: 10px;">
-                    <span class="tag">React / Next.js</span>
-                    <span class="tag">TypeScript</span>
-                    <span class="tag">Node.js</span>
-                    <span class="tag">Three.js</span>
-                    <span class="tag">Framer Motion</span>
-                    <span class="tag">PostgreSQL</span>
-                    <span class="tag">UI/UX Design</span>
-                    <span class="tag">Solidity</span>
-                </div>
-                <h3 style="margin-top: 30px;">Vibes</h3>
-                <p style="font-size: 0.9rem; color: var(--text-dim);">
-                    Lo-fi beats, mechanical keyboards, and 100% test coverage.
-                </p>
-            </section>
-
-            <!-- Social/Contact -->
-            <section class="card social-card" style="cursor: pointer;" onclick="window.location.href='mailto:hello@alex.dev'">
-                <div style="text-align: center;">
-                    <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 5px;">Hit me up</div>
-                    <div style="font-weight: 600;">Let's Chat ⚡️</div>
-                </div>
-            </section>
-
-            <!-- Experience -->
-            <section class="card work-card">
-                <h3>Proof of Work</h3>
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    {% for job in jobs %}
-                    <div>
-                        <strong style="color: #fff;">{{ job.position }} @ {{ job.company.name }}</strong>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">
-                            {{ job.description }}
-                        </p>
-                        <p style="font-size: 0.85rem; color: var(--text-dim);">
-                            {{ job.start_date }} - {% if job.end_date %}{{ job.end_date }}{% else %}Present{% endif %}
-                        </p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Extra -->
-            <section class="card">
-                <h3>Location</h3>
-                <p>Digital Nomad / Earth</p>
-            </section>
-
-        </main>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="search-hero">
+        <h1>Find Your Next Expert</h1>
+        <p style="color: var(--text-muted); font-size: 1.25rem;">Explore our community of world-class professionals</p>
+        
+        <form class="search-form" method="GET" action="{% url 'landing_page' %}">
+            <input type="text" name="q" placeholder="Search by name, skills, company, school..." value="{{ query }}">
+            <button type="submit" class="btn">Search</button>
+        </form>
     </div>
 
-    <script>
-        // Generate stars dynamically
-        const bg = document.getElementById('bg');
-        const count = 150;
-        for (let i = 0; i < count; i++) {
-            const star = document.createElement('div');
-            star.className = 'stars';
-            const x = Math.random() * 100;
-            const y = Math.random() * 2000;
-            const duration = 50 + Math.random() * 100;
-            star.style.left = `${x}%`;
-            star.style.top = `${y}px`;
-            star.style.animationDuration = `${duration}s`;
-            bg.appendChild(star);
-        }
+    <!-- Top Rated Section -->
+    <div class="section-header">
+        <h2>Top Rated Resumes</h2>
+        <a href="{% url 'resume_list' %}" style="color: var(--primary); text-decoration: none;">View All</a>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in top_rated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
 
-        // Add subtle parallax to cards
-        document.addEventListener('mousemove', (e) => {
-            const cards = document.querySelectorAll('.card');
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
-            cards.forEach(card => {
-                const speed = 10;
-                card.style.transform = `translate(${(x - 0.5) * speed}px, ${(y - 0.5) * speed}px)`;
-            });
-        });
-    </script>
-</body>
-</html>
+    <!-- Unrated Section -->
+    <div class="section-header">
+        <h2>Unrated Resumes</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in unrated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+
+    <!-- Recently Created Section -->
+    <div class="section-header">
+        <h2>Recently Created</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in recent %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+
+    <!-- Last Updated Section -->
+    <div class="section-header">
+        <h2>Recently Updated</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in updated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}
