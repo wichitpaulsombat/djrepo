@@ -1,0 +1,20 @@
+:80 {
+
+# Serve Static Files (Frontend)
+
+root * /srv
+
+file_server
+
+try_files {path} /index.html
+
+
+# Proxy API requests to Backend
+
+handle /api/* {
+
+reverse_proxy backend:8000
+
+}
+
+}
