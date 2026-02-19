@@ -5,6 +5,25 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from main.models import Resume, Rating, Skill, Education, PreviousJob, Company
 from main.forms import ResumeForm, SkillForm, EducationForm, PreviousJobForm
+from rest_framework import viewsets
+from main.serializers import ResumeSerializer, PreviousJobSerializer, EducationSerializer, SkillSerializer
+
+
+class ResumeViewSet(viewsets.ModelViewSet):
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
+
+class PreviousJobViewSet(viewsets.ModelViewSet):
+    queryset = PreviousJob.objects.all()
+    serializer_class = PreviousJobSerializer
+
+class EducationViewSet(viewsets.ModelViewSet):
+    queryset = Education.objects.all()
+    serializer_class = EducationSerializer
+
+class SkillViewSet(viewsets.ModelViewSet):
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
 
 def landing_page(request):
     query = request.GET.get('q', '').strip()

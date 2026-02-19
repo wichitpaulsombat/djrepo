@@ -9,12 +9,14 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            '-n',
             '--number',
             type=int,
             default=3000,
             help='Number of resumes to generate'
         )
         parser.add_argument(
+            '-c',
             '--clear',
             action='store_true',
             help='Clear existing resumes and related data before generating'
