@@ -1,0 +1,203 @@
+{% extends 'main/base.html' %}
+
+{% block title %}ResumeHub - Discover Top Talent{% endblock %}
+
+{% block extra_head %}
+<style>
+    .horizontal-scroll-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--primary);
+        padding-left: 1rem;
+    }
+
+    .section-header h2 {
+        margin-bottom: 0;
+        font-size: 1.75rem;
+    }
+
+    .search-hero {
+        text-align: center;
+        padding: 4rem 0;
+        background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        border-radius: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .search-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .search-form {
+        max-width: 600px;
+        margin: 2rem auto 0;
+        position: relative;
+    }
+
+    .search-form input {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 1rem;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-form button {
+        position: absolute;
+        right: 0.75rem;
+        top: 0.75rem;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .resume-card {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .resume-card .card {
+        height: 100%;
+        transition: transform 0.3s, border-color 0.3s;
+        padding: 1.5rem;
+        margin-bottom: 0;
+    }
+
+    .resume-card:hover .card {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+    }
+
+    .profile-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 0.75rem;
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
+
+    .profile-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 0.75rem;
+        background: #334155;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .rating-badge {
+        color: #fbbf24;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 1rem;
+    }
+
+    .skill-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+        background: rgba(99, 102, 241, 0.1);
+        color: #818cf8;
+        border-radius: 2rem;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if is_search %}
+    <div style="margin-bottom: 3rem;">
+        <a href="{% url 'landing_page' %}" style="color: var(--primary); text-decoration: none;">← Back to Home</a>
+        <h1 style="margin-top: 1rem;">Search Results for "{{ query }}"</h1>
+        <p style="color: var(--text-muted);">{{ resumes|length }} resumes found</p>
+    </div>
+
+    <div class="horizontal-scroll-container">
+        {% for resume in resumes %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% empty %}
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+                <p style="color: var(--text-muted);">No results found for your search.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="search-hero">
+        <h1>Find Your Next Expert</h1>
+        <p style="color: var(--text-muted); font-size: 1.25rem;">Explore our community of world-class professionals</p>
+        
+        <form class="search-form" method="GET" action="{% url 'landing_page' %}">
+            <input type="text" name="q" placeholder="Search by name, skills, company, school..." value="{{ query }}">
+            <button type="submit" class="btn">Search</button>
+        </form>
+    </div>
+
+    <!-- Top Rated Section -->
+    <div class="section-header">
+        <h2>Top Rated Resumes</h2>
+        <a href="{% url 'resume_list' %}" style="color: var(--primary); text-decoration: none;">View All</a>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in top_rated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+
+    <!-- Unrated Section -->
+    <div class="section-header">
+        <h2>Unrated Resumes</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in unrated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+
+    <!-- Recently Created Section -->
+    <div class="section-header">
+        <h2>Recently Created</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in recent %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+
+    <!-- Last Updated Section -->
+    <div class="section-header">
+        <h2>Recently Updated</h2>
+    </div>
+    <div class="horizontal-scroll-container">
+        {% for resume in updated %}
+            {% include 'main/includes/resume_card.html' with resume=resume %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

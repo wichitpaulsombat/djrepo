@@ -1,0 +1,52 @@
+services:
+  backend:
+    build: ./backend
+    command: gunicorn mysite.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_NAME=resumehub_db
+      - DB_USER=resumehub_user
+      - DB_PASSWORD=resumehub_password
+      - DB_PORT=5432
+    deploy:
+      replicas: 3
+
+  frontend-build:
+    build: ./frontend
+    command: sh -c "npm run build && cp -r dist/* /shared/"
+    volumes:
+      - frontend_dist:/app/dist
+      - static_volume:/shared
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - static_volume:/srv  # Serve frontend from volume
+    depends_on:
+      - backend
+      - frontend-build
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=resumehub_db
+      - POSTGRES_USER=resumehub_user
+      - POSTGRES_PASSWORD=resumehub_password
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+
+volumes:
+  static_volume:
+  frontend_dist:

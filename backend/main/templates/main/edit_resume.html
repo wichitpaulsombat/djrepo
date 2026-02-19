@@ -1,0 +1,129 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Edit Resume - ResumeHub{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 2rem;">Update Your Professional Profile</h1>
+
+    <!-- Core Profile -->
+    <section class="card">
+        <h2 style="font-size: 1.25rem;">General Information</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                {{ form.profile_image.label_tag }}
+                {{ form.profile_image }}
+                {% if resume.profile_image %}
+                    <img src="{{ resume.profile_image.url }}" style="width: 100px; height: 100px; border-radius: 1rem; margin-top: 0.5rem; object-fit: cover;">
+                {% endif %}
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                {{ form.success_summary.label_tag }}
+                {{ form.success_summary }}
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.success_summary.help_text }}</p>
+            </div>
+            <button type="submit" class="btn">Save Profile Changes</button>
+        </form>
+    </section>
+
+    <!-- Skills -->
+    <section class="card">
+        <h2 style="font-size: 1.25rem;">Skills</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+            {% for skill in skills %}
+                <span style="background: rgba(99, 102, 241, 0.1); color: #818cf8; padding: 0.25rem 0.75rem; border-radius: 2rem; border: 1px solid rgba(99, 102, 241, 0.2); display: flex; align-items: center; gap: 0.5rem;">
+                    {{ skill.name }}
+                </span>
+            {% endfor %}
+        </div>
+        <form action="{% url 'add_skill' %}" method="post" style="display: flex; gap: 1rem;">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Skill Name (e.g. Python, Leadership)" required style="margin-bottom: 0;">
+            <button type="submit" class="btn" style="white-space: nowrap;">Add Skill</button>
+        </form>
+    </section>
+
+    <!-- Experience -->
+    <section class="card">
+        <h2 style="font-size: 1.25rem;">Work Experience</h2>
+        <div style="margin-bottom: 1.5rem;">
+            {% for job in previous_jobs %}
+                <div style="padding: 1rem; background: rgba(15, 23, 42, 0.3); border-radius: 0.75rem; border: 1px solid var(--glass-border); margin-bottom: 0.75rem;">
+                    <strong>{{ job.position }}</strong> at {{ job.company.name }}<br>
+                    <small style="color: var(--text-muted);">{{ job.start_date|date:"M Y" }} - {{ job.end_date|date:"M Y"|default:"Present" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Add Previous Job</h3>
+        <form action="{% url 'add_job' %}" method="post">
+            {% csrf_token %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label>Company</label>
+                    <select name="company" required>
+                        {% for company in companies %}
+                             <option value="{{ company.id }}">{{ company.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Position</label>
+                    <input type="text" name="position" required>
+                </div>
+                <div>
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div>
+                    <label>End Date</label>
+                    <input type="date" name="end_date">
+                </div>
+            </div>
+            <label>Description</label>
+            <textarea name="description" rows="3" required></textarea>
+            <button type="submit" class="btn">Add Experience</button>
+        </form>
+    </section>
+
+    <!-- Education -->
+    <section class="card">
+        <h2 style="font-size: 1.25rem;">Education</h2>
+        <div style="margin-bottom: 1.5rem;">
+            {% for edu in education %}
+                <div style="padding: 1rem; background: rgba(15, 23, 42, 0.3); border-radius: 0.75rem; border: 1px solid var(--glass-border); margin-bottom: 0.75rem;">
+                    <strong>{{ edu.degree }}</strong> from {{ edu.school_name }}<br>
+                    <small style="color: var(--text-muted);">{{ edu.start_date|date:"Y" }} - {{ edu.end_date|date:"Y"|default:"Present" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Add Education</h3>
+        <form action="{% url 'add_education' %}" method="post">
+            {% csrf_token %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label>School Name</label>
+                    <input type="text" name="school_name" required>
+                </div>
+                <div>
+                    <label>Degree</label>
+                    <input type="text" name="degree" required>
+                </div>
+                <div>
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div>
+                    <label>End Date</label>
+                    <input type="date" name="end_date">
+                </div>
+            </div>
+            <label>Description</label>
+            <textarea name="description" rows="2"></textarea>
+            <button type="submit" class="btn">Add Education</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ resume.owner.username }}'s Resume - ResumeHub{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 350px 1fr; gap: 3rem; align-items: start;">
+    <!-- Sidebar -->
+    <aside>
+        <div class="card" style="text-align: center;">
+            {% if resume.profile_image %}
+                <img src="{{ resume.profile_image.url }}" alt="{{ resume.owner.username }}" style="width: 150px; height: 150px; border-radius: 2rem; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 1.5rem;">
+            {% else %}
+                <div style="width: 150px; height: 150px; border-radius: 2rem; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 700; margin: 0 auto 1.5rem;">
+                    {{ resume.owner.username|first|upper }}
+                </div>
+            {% endif %}
+            
+            <h2 style="margin-bottom: 0.5rem;">{{ resume.owner.get_full_name|default:resume.owner.username }}</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">{{ resume.owner.email }}</p>
+            
+            <div style="background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--glass-border);">
+                <div style="font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Average Rating</div>
+                <div style="font-size: 2.5rem; font-weight: 700; color: #fbbf24;">
+                    {% if average_rating %}{{ average_rating|stringformat:".1f" }}{% else %}N/A{% endif %}
+                </div>
+                <div style="color: #fbbf24; margin-top: 0.25rem;">
+                    {% if average_rating %}
+                        {% with ''|center:5 as range %}
+                        {% for _ in range %}
+                            {% if forloop.counter <= average_rating %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if user.is_authenticated and user != resume.owner %}
+                <div style="margin-top: 2rem;">
+                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Rate this resume</h3>
+                    <form action="{% url 'rate_resume' resume.pk %}" method="post" style="display: flex; gap: 0.5rem; justify-content: center;">
+                        {% csrf_token %}
+                        <div class="rating-input">
+                            {% for i in "12345" %}
+                                <input type="radio" name="score" value="{{ forloop.counter }}" id="star{{ forloop.counter }}" style="display: none;" required>
+                                <label for="star{{ forloop.counter }}" style="cursor: pointer; font-size: 1.5rem; color: var(--text-muted);" onclick="highlightStars({{ forloop.counter }})">★</label>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn" style="padding: 0.4rem 1rem; font-size: 0.875rem;">Submit</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            {% if user == resume.owner %}
+                <div style="margin-top: 1.5rem;">
+                    <a href="{% url 'edit_resume' %}" class="btn" style="width: 100%;">Edit Profile</a>
+                </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <section class="card">
+            <h2>Success Summary</h2>
+            <p style="white-space: pre-line; font-size: 1.1rem; color: #cbd5e1;">{{ resume.success_summary }}</p>
+        </section>
+
+        <section class="card">
+            <h2>Skills</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                {% for skill in resume.skills.all %}
+                    <span style="background: rgba(99, 102, 241, 0.1); color: #818cf8; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 600; border: 1px solid rgba(99, 102, 241, 0.2);">
+                        {{ skill.name }}
+                    </span>
+                {% empty %}
+                    <p style="color: var(--text-muted);">No skills listed yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Experience</h2>
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                {% for job in resume.previous_jobs.all %}
+                    <div style="border-left: 2px solid var(--primary); padding-left: 1.5rem; position: relative;">
+                        <div style="position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <div>
+                                <h3 style="margin-bottom: 0.25rem;">{{ job.position }}</h3>
+                                <div style="color: var(--primary); font-weight: 600;">{{ job.company.name }}</div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--text-muted); background: rgba(30, 41, 59, 0.8); padding: 0.25rem 0.75rem; border-radius: 2rem; border: 1px solid var(--glass-border);">
+                                {{ job.start_date|date:"M Y" }} - {% if job.end_date %}{{ job.end_date|date:"M Y" }}{% else %}Present{% endif %}
+                            </div>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">{{ job.description }}</p>
+                    </div>
+                {% empty %}
+                    <p style="color: var(--text-muted);">No experience listed yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Education</h2>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                {% for edu in resume.education.all %}
+                    <div style="background: rgba(15, 23, 42, 0.3); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--glass-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <div>
+                                <h3 style="margin-bottom: 0.25rem; font-size: 1.1rem;">{{ edu.degree }}</h3>
+                                <div style="color: #a855f7; font-weight: 600;">{{ edu.school_name }}</div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--text-muted);">
+                                {{ edu.start_date|date:"Y" }} - {% if edu.end_date %}{{ edu.end_date|date:"Y" }}{% else %}Present{% endif %}
+                            </div>
+                        </div>
+                        {% if edu.description %}
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">{{ edu.description }}</p>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p style="color: var(--text-muted);">No education history listed yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    function highlightStars(count) {
+        const labels = document.querySelectorAll('.rating-input label');
+        labels.forEach((label, index) => {
+            if (index < count) {
+                label.style.color = '#fbbf24';
+            } else {
+                label.style.color = 'var(--text-muted)';
+            }
+        });
+    }
+</script>
+{% endblock %}
