@@ -1,1 +1,1 @@
-# trigger django ci
+# trigger django ci test
