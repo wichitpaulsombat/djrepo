@@ -2,12 +2,12 @@ name: React CI
 
 on:
   push:
-    branches: [ "wk05" ]
+    branches: ["wk05"]
     paths:
       - "frontend/**"
 
   pull_request:
-    branches: [ "wk05" ]
+    branches: ["wk05"]
     paths:
       - "frontend/**"
 
