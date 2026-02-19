@@ -9,9 +9,10 @@ dependencies = [
     "django-cors-headers>=4.9.0",
     "django-redis>=6.0.0",
     "djangorestframework>=3.16.1",
+    "faker>=40.4.0",
     "gunicorn>=25.0.3",
     "pillow>=12.1.1",
-    "psycopg2-binary>=2.9.11",
+    "psycopg>=3.3.3",
 ]
 
 [dependency-groups]
