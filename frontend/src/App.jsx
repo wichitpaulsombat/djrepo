@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Resume Hub test</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Resume Hub test1</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {resumes.map(resume => (
           <div key={resume.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
