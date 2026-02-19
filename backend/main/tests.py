@@ -4,7 +4,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from .models import Resume, PreviousJob, Education, Skill, Company
 from django.contrib.auth.models import User
-
+# Create your tests here.
 class ResumeAPITest(TestCase):
     def setUp(self):
         self.client = APIClient()
