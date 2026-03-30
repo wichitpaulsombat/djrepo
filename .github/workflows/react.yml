@@ -61,3 +61,6 @@ jobs:
       env:
 
         CI: false # ป้องกัน build fail จาก warning เล็กน้อย (Optional)
+
+    - name: Lint
+      run: npm run lint
