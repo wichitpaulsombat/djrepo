@@ -42,7 +42,7 @@ jobs:
 
       with:
 
-        python-version: "3.11"
+        python-version: "3.9.6"
 
 
     - name: Install Dependencies

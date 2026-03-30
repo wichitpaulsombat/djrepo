@@ -42,7 +42,7 @@ jobs:
 
       with:
 
-        node-version: "18"
+        node-version: "24.11.1"
 
         cache: "npm"
 
