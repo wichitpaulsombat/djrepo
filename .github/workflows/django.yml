@@ -6,9 +6,9 @@ on:
 
     branches: [ "wk05" ]
 
-    paths:
+    # paths:
 
-      - "backend/**" # ทำงานเฉพาะเมื่อแก้ backend
+    #   - "backend/**" # ทำงานเฉพาะเมื่อแก้ backend
 
   pull_request:
 
