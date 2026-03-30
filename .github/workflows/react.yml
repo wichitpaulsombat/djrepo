@@ -10,7 +10,7 @@ on:
     branches: [ "wk06" ]
     paths:
       - "frontend/**"
-
+# trigger ci
 jobs:
   build:
     runs-on: ubuntu-latest
