@@ -6,9 +6,9 @@ on:
 
     branches: [ "wk05" ]
 
-    paths:
+    # paths:
 
-      - "frontend/**" # เฉพาะไฟล์ Frontend
+    #   - "frontend/**" # เฉพาะไฟล์ Frontend
 
   pull_request:
 
